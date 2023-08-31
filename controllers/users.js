@@ -9,7 +9,7 @@ usersRouter.get("/", async (request, response) => {
 });
 
 usersRouter.post("/", async (request, response) => {
-  const { username, name, password } = request.body;
+  const { username, name, password, email, birthday } = request.body;
 
   if (!password) {
     return response.status(400).json({
@@ -24,15 +24,22 @@ usersRouter.post("/", async (request, response) => {
     const passwordHash = await bcrypt.hash(password, saltRounds);
 
     const user = new User({
-      username: username,
-      name: name,
+      username,
+      name,
       password: passwordHash,
+      email,
+      birthday,
     });
 
     const savedUser = await user.save();
 
     response.status(201).json(savedUser);
   }
+});
+
+usersRouter.delete("/:id", async (request, response) => {
+  await User.findByIdAndRemove(request.params.id);
+  response.status(204).end();
 });
 
 module.exports = usersRouter;
