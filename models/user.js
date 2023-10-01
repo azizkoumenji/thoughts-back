@@ -13,6 +13,12 @@ const userSchema = mongoose.Schema({
   password: String,
   email: String,
   birthday: Date,
+  posts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Post",
+    },
+  ],
 });
 
 userSchema.plugin(uniqueValidator);
@@ -22,7 +28,7 @@ userSchema.set("toJSON", {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
     delete returnedObject.__v;
-    delete returnedObject.passwordHash;
+    delete returnedObject.password;
   },
 });
 
